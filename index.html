@@ -1158,13 +1158,13 @@ function App() {
                 const flash = tapFlash === i ? " tap-flash" : "";
                 if (b.type === "h3") {
                   return (
-                    <div key={i} className="scene-h reveal">
+                    <div key={i} className="scene-h">
                       <h3>{b.text}</h3>
                     </div>
                   );
                 }
                 return (
-                  <div key={i} className={"para reveal " + (isHL ? "highlighted " : "") + flash} onClick={(e) => { if (!e.target.closest('button')) tapHighlight(i); }}>
+                  <div key={i} className={"para " + (isHL ? "highlighted " : "") + flash} onClick={(e) => { if (!e.target.closest('button')) tapHighlight(i); }}>
                     {b.type === "p" && <p>{inlineFormat(b.text)}</p>}
                     {b.type === "ul" && <ul>{b.items.map((it, j) => <li key={j}>{inlineFormat(it)}</li>)}</ul>}
                     {b.type === "quote" && <div className="quote">{b.text}</div>}
@@ -1175,7 +1175,7 @@ function App() {
 
               {/* Try-it callout if practice */}
               {readerLesson.usable && (
-                <div className="try-it reveal">
+                <div className="try-it">
                   <h4>★ probalo ahora</h4>
                   <div className="pr">
                     Soy [tu profesión] y estoy trabajando en [proyecto]. Ayudame a {readerLesson.title.toLowerCase().replace(/^[a-z]/, c => c.toLowerCase())}.
@@ -1188,7 +1188,7 @@ function App() {
               )}
 
               {/* Quiz */}
-              <div className="quiz reveal">
+              <div className="quiz">
                 <div className="badge">Quiz · 1 pregunta</div>
                 <div className="q">{readerLesson.quiz.question}</div>
                 <div className="opts">
