@@ -48,12 +48,12 @@ La diferencia entre uno y otro es casi siempre cómo le hablás.`,
             ],
             correct: 1,
             feedback: "Exacto. Claude no te trae lo que existe — te ayuda a crear lo que falta."
-          }
-        },
+          },
           printable: {
             title: "Claude no busca. Razona.",
-            points: ["No trae links — construye con vos", "Mantiene contexto en conversaciones largas", "Ajusta tono, formato y profundidad", "Trabaja con lo que vos le das", "La calidad de la respuesta depende de cómo le hablás"]
-          },
+            points: ["No trae links — construye con vos", "Mantiene contexto en conversaciones largas", "Ajusta tono, formato y profundidad", "Trabaja con lo que vos le das", "La calidad depende de cómo le hablás"]
+          }
+        },
         {
           id: "00-02",
           title: "Qué puede hacer y qué no",
@@ -91,12 +91,12 @@ Claude es tan bueno como la información que le das. Un brief vago produce ideas
             ],
             correct: 1,
             feedback: "Cada chat empieza de cero. Esto cambia cómo trabajás con él."
-          }
-        },
+          },
           printable: {
             title: "Claude: sí / no",
-            points: ["✓ Escribe, resume, estructura, genera ideas", "✓ Lee documentos y trabaja con ellos", "✓ Mantiene tono si le mostrás ejemplos", "✗ No navega internet en tiempo real", "✗ No recuerda chats anteriores", "✗ No reemplaza tu criterio"]
-          },
+            points: ["Escribe, resume, estructura, genera ideas", "Lee documentos y trabaja con ellos", "Mantiene tono si le mostrás ejemplos", "No navega internet en tiempo real", "No recuerda chats anteriores", "No reemplaza tu criterio"]
+          }
+        },
         {
           id: "00-03",
           title: "Tu primera conversación en 5 minutos",
@@ -134,12 +134,12 @@ Cómo dar contexto, cómo pedir variantes, y cómo iterar. Eso es el 80% de sabe
             ],
             correct: 2,
             feedback: "La primera respuesta es punto de partida, no entregable. Iterar es el oficio."
-          }
-        },
+          },
           printable: {
             title: "Tu primer prompt en 4 partes",
-            points: ["1. Quién sos (tu profesión y contexto)", "2. En qué estás trabajando (proyecto)", "3. Qué necesitás exactamente (tarea)", "4. Para quién es (audiencia o cliente)"]
+            points: ["1. Quién sos (profesión y contexto)", "2. En qué estás trabajando", "3. Qué necesitás exactamente", "4. Para quién es (audiencia o cliente)"]
           }
+        }
       ]
     },
     {
@@ -194,12 +194,12 @@ Usá los cuatro. La diferencia es inmediata.`,
             ],
             correct: 2,
             feedback: "Tiene los 4 elementos: contexto, rol, tarea específica y formato."
-          }
-        },
+          },
           printable: {
             title: "El prompt en 4 partes",
             points: ["CONTEXTO: quién sos y en qué situación", "ROL: qué querés que Claude sea", "TAREA: qué necesitás exactamente", "FORMATO: cómo querés la respuesta"]
-          },
+          }
+        },
         {
           id: "01-02",
           title: "El prompt malo vs el que funciona",
@@ -242,12 +242,12 @@ Usá los cuatro. La diferencia es inmediata.`,
             ],
             correct: 1,
             feedback: "Especificar audiencia, tono, formato y restricciones cambia todo."
-          }
-        },
+          },
           printable: {
             title: "Checklist del buen prompt",
-            points: ["¿Dijiste quién sos o en qué contexto estás?", "¿La tarea es específica y medible?", "¿Mencionaste la audiencia o el cliente?", "¿Pediste un formato concreto?", "¿Pusiste el tono que necesitás?"]
-          },
+            points: ["Dijiste quién sos y en qué contexto", "La tarea es específica y medible", "Mencionaste audiencia o cliente", "Pediste un formato concreto", "Pusiste el tono que necesitás"]
+          }
+        },
         {
           id: "01-03",
           title: "Iterar: cuando la primera respuesta no alcanza",
@@ -287,12 +287,12 @@ La clave es tratar cada respuesta como un borrador. Claude no se cansa, no se of
             ],
             correct: 2,
             feedback: "Iterar el tono es una de las habilidades más útiles."
-          }
-        },
+          },
           printable: {
             title: "Frases para iterar",
-            points: [""Está bien pero suena muy [X]. Reescribilo más [Y]"", ""La opción X es la mejor. Desarrollá esa con 3 variantes"", ""Jugá de abogado del diablo. ¿Qué falla en esto?"", ""Tomá la estructura de X y el tono de Y"", ""Resumilo en máximo [N] palabras""]
-          },
+            points: ["Suena muy [X]. Reescribilo más [Y]", "La opción X me interesa. Desarrollá con 3 variantes", "Jugá de abogado del diablo. Qué falla", "Tomá la estructura de X y el tono de Y", "Resumilo en máximo [N] palabras"]
+          }
+        },
         {
           id: "01-04",
           title: "Ejercicio: reescribí tus últimos 3 prompts",
@@ -333,12 +333,12 @@ El ejercicio es simple. El resultado no lo es.`,
             ],
             correct: 1,
             feedback: "Lo que cambia es la utilidad — no la calidad teórica."
-          }
-        },
+          },
           printable: {
             title: "Transformá tu prompt",
-            points: ["1. Tomá un prompt que usaste esta semana", "2. Agregá contexto: quién sos, en qué situación", "3. Definí el rol que querés que tome Claude", "4. Especificá la tarea con más detalle", "5. Pedí un formato concreto", "6. Compará las respuestas. ¿Qué cambió?"]
+            points: ["1. Tomá un prompt de esta semana", "2. Agregá contexto: quién sos", "3. Definí el rol para Claude", "4. Especificá la tarea con más detalle", "5. Pedí un formato concreto", "6. Compará las respuestas"]
           }
+        }
       ]
     },
     {
@@ -383,12 +383,12 @@ Cuando Claude te dé algo que encienda algo en vos, decile: *"Esa dirección me 
             ],
             correct: 1,
             feedback: "Pedile el mapa, no el destino. Vos elegís por dónde ir."
+          },
+          printable: {
+            title: "El prompt del bloqueo",
+            points: ["Describí el proyecto en una línea", "Aclará para quién es", "Pedí 5 enfoques distintos", "Pedí territorios inesperados", "Pedí ejemplo concreto por enfoque", "Cuando algo enciende: seguí por ahí"]
           }
         },
-          printable: {
-            title: "El prompt del bloqueo creativo",
-            points: ["Describí el proyecto con una línea", "Aclará para quién es", "Pedí 5 enfoques distintos", "Pedí que incluya territorios inesperados", "Pedí ejemplo concreto de cada dirección", "Cuando algo enciende: "Seguí por ahí, llevala más lejos""]
-          },
         {
           id: "02-02",
           title: "Escribir ese email difícil",
@@ -424,12 +424,12 @@ El secreto: más contexto = menos vueltas. No le ahorres información a Claude.`
             ],
             correct: 1,
             feedback: "Sin contexto, el email es genérico. Con contexto, suena humano."
-          }
-        },
+          },
           printable: {
             title: "Emails difíciles: qué incluir",
-            points: ["Quién es el destinatario (rol y relación)", "Qué pasó exactamente", "Qué resultado querés del email", "Tono: formal/informal, firme/abierto", "Largo máximo (párrafos o palabras)", "Qué NO querés que suene (defensivo, servil…)"]
-          },
+            points: ["Quién es el destinatario", "Qué pasó exactamente", "Qué resultado querés", "Tono: formal o informal", "Largo máximo", "Qué NO querés que suene"]
+          }
+        },
         {
           id: "02-03",
           title: "Generar nombres, conceptos, ideas",
@@ -462,12 +462,12 @@ El filtro final siempre es tuyo. Claude te da el mapa. Vos elegís el camino.`,
             ],
             correct: 1,
             feedback: "6-10 con criterios filtra señal del ruido."
-          }
-        },
+          },
           printable: {
             title: "Pedir opciones que sirven",
-            points: ["Describí el proyecto con precisión", "Pedí un número específico (6-10 opciones)", "Dá 3 criterios que tiene que cumplir", "Decí qué querés evitar", "Pedí una línea de fundamentación por opción", "El filtro final siempre es tuyo"]
-          },
+            points: ["Describí el proyecto con precisión", "Pedí 6 a 10 opciones", "Dá 3 criterios que tiene que cumplir", "Decí qué querés evitar", "Pedí fundamentación por opción", "El filtro final es tuyo"]
+          }
+        },
         {
           id: "02-04",
           title: "Resumir y organizar información",
@@ -505,12 +505,12 @@ Esto solo ya te ahorra horas por semana.`,
             ],
             correct: 1,
             feedback: "Pedir las 3 capas (resumen, gaps, críticos) te da material accionable."
-          }
-        },
+          },
           printable: {
             title: "Organizar info con Claude",
-            points: ["Subí el doc o pegá el texto directamente", "Describí qué tipo de documento es", "Pedí resumen en bullets (máximo 5)", "Pedí que identifique qué falta o está poco claro", "Pedí los puntos más críticos para tu próximo paso", "Para reuniones: qué dijo / qué no dijo / preguntas pendientes"]
-          },
+            points: ["Subí el doc o pegá el texto", "Describí qué tipo de documento es", "Pedí resumen en bullets (máx 5)", "Pedí que identifique qué falta", "Pedí los puntos críticos", "Para reuniones: qué dijo y qué no"]
+          }
+        },
         {
           id: "02-05",
           title: "Pedirle que te critique",
@@ -546,12 +546,12 @@ Usá lo que sirve. Ignorá lo que no aplica. El criterio final es tuyo. Pero al 
             ],
             correct: 2,
             feedback: "Asignarle un rol crítico produce feedback de otro nivel."
-          }
-        },
+          },
           printable: {
             title: "El prompt de la crítica",
-            points: ["Decile: "Analizá esto como [rol crítico]"", "Pedí: qué está bien y por qué", "Pedí: qué no funciona y por qué", "Pedí: qué le falta", "Pedí: "¿Qué pregunta incómoda haría alguien que quiere rechazarlo?"", "Usá lo que sirve. El criterio final es tuyo."]
+            points: ["Analizá esto como [rol crítico]", "Qué está bien y por qué", "Qué no funciona y por qué", "Qué le falta", "Qué pregunta incómoda haría un cliente exigente", "El criterio final es tuyo"]
           }
+        }
       ]
     },
     {
@@ -598,12 +598,12 @@ Datos y hechos: siempre verificar.`,
             ],
             correct: 2,
             feedback: "Datos y hechos: siempre verificar. Creatividad: iterar."
+          },
+          printable: {
+            title: "Cuándo verificar a Claude",
+            points: ["Datos numéricos: siempre verificar", "Citas de personas o libros: verificar", "Fechas y cronologías: verificar", "Ideas y textos: confiar e iterar", "Información reciente: puede estar desactualizado"]
           }
         },
-          printable: {
-            title: "Cuándo verificar lo que dice Claude",
-            points: ["Datos numéricos y estadísticas → siempre verificar", "Citas de personas o libros → siempre verificar", "Fechas y cronologías → verificar", "Ideas, textos, estructuras → confiar e iterar", "Información post-2024 → puede estar desactualizado", "Si suena muy específico: chequealo"]
-          },
         {
           id: "03-02",
           title: "Tu voz vs la voz de la IA",
@@ -642,12 +642,12 @@ Pedile el esqueleto. Vos ponés la carne.
             ],
             correct: 1,
             feedback: "Tu voz es tu diferencial. No la delegues."
-          }
-        },
+          },
           printable: {
             title: "Cuidar tu voz con Claude",
-            points: ["Siempre editá al menos una oración", "Mostrá ejemplos de tu propio estilo", "Pedile la estructura — vos ponés la voz", "¿Yo diría esto así? Si no: cambialo", "Tu voz es tu diferencial. No la delegues."]
-          },
+            points: ["Siempre editá al menos una oración", "Mostrá ejemplos de tu estilo", "Pedile la estructura, vos ponés la voz", "Si no lo dirías así: cambialo", "Tu voz es tu diferencial"]
+          }
+        },
         {
           id: "03-03",
           title: "Privacidad: qué no le mandes",
@@ -685,12 +685,12 @@ Esto no es paranoia. Es profesionalismo básico.`,
             ],
             correct: 1,
             feedback: "Anonimizar es el equilibrio: usás Claude sin exponer información real."
-          }
-        },
+          },
           printable: {
             title: "Qué no subir a Claude",
-            points: ["✗ Contratos con datos personales de clientes", "✗ Información financiera confidencial", "✗ Datos bajo NDA sin revisar", "✗ Credenciales o contraseñas", "✓ Anonimizá: reemplazá nombres por [Cliente A]", "✓ Regla: ¿Lo mandarías por email sin dudar? OK."]
+            points: ["No: contratos con datos personales", "No: información financiera confidencial", "No: datos bajo NDA sin revisar", "No: credenciales o contraseñas", "Sí: anonimizá con [Cliente A]", "Regla: lo mandarías por email sin dudar?"]
           }
+        }
       ]
     }
   ]
