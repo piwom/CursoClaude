@@ -845,12 +845,6 @@ function App() {
 
   const [printLesson, setPrintLesson] = React.useState(null);
 
-  const openPrintCard = React.useCallback(() => {
-    const mod = COURSE.modules.find(m => m.id === activeMod);
-    const les = mod && mod.lessons[activeLes];
-    if (les && les.printable) setPrintLesson(les);
-  }, [activeMod, activeLes]);
-
   const doPrint = React.useCallback((lesson) => {
     const pts = lesson.printable.points.map(p => '<li>' + p + '</li>').join('');
     const w = window.open('', '_blank');
@@ -1236,7 +1230,7 @@ function App() {
                   {readerIsComp ? "Siguiente lección" : "Marcar como completada"}
                   <span className="arrow">{I.arrow}</span>
                 </button>
-                {COURSE.modules[activeMod]?.lessons[activeLes]?.printable && <button className="card-btn" onClick={openPrintCard}>{I.print} Tarjeta</button>}<button className="ghost" onClick={closeReader}>Volver al curso</button>
+                {readerLesson?.printable && <button className="card-btn" onClick={() => setPrintLesson(readerLesson)}>{I.print} Tarjeta</button>}<button className="ghost" onClick={closeReader}>Volver al curso</button>
               </div>
             </div>
           </>
