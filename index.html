@@ -1,0 +1,1457 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Claude ABC · Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ECE2CB;
+    --card: #F8F1DC;
+    --card-2: #FCF6E5;
+    --ink: #161208;
+    --ink-2: #38301E;
+    --muted: #7A6E55;
+    --line: rgba(22,18,8,0.12);
+    --line-strong: rgba(22,18,8,0.28);
+    --module-hue: oklch(0.62 0.14 40);
+    --tape: #FFE17D;
+    --tape-2: #FFB877;
+    --punch: #FF5C2E;
+    --shadow-sm: 0 1px 2px rgba(22,18,8,0.08);
+    --shadow-md: 0 6px 18px -8px rgba(22,18,8,0.24), 0 2px 4px rgba(22,18,8,0.06);
+    --shadow-lg: 0 24px 50px -20px rgba(22,18,8,0.36);
+  }
+  [data-theme="dark"] {
+    --bg: #0F0C06;
+    --card: #1A150D;
+    --card-2: #221C12;
+    --ink: #F5ECD2;
+    --ink-2: #D5C9A8;
+    --muted: #847761;
+    --line: rgba(245,236,210,0.1);
+    --line-strong: rgba(245,236,210,0.28);
+    --tape: oklch(0.78 0.15 80);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--bg); color: var(--ink); font-family: "Inter Tight", system-ui, sans-serif; -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; font-feature-settings: "ss01"; }
+  body { min-height: 100vh; min-height: 100dvh; padding-bottom: 90px; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  ::selection { background: var(--module-hue); color: var(--card-2); }
+
+  /* shell — phone-sized but stretches subtly on desktop */
+  .stage { max-width: 480px; margin: 0 auto; padding: 0 0 24px; position: relative; }
+  @media (min-width: 800px) { .stage { padding-top: 28px; } }
+
+  /* Top brand */
+  .brand-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 18px 10px;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-weight: 800; letter-spacing: -0.02em; font-size: 16px;
+  }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--module-hue);
+    display: grid; place-items: center;
+    color: var(--card-2); font-weight: 900; font-size: 14px;
+    transform: rotate(-3deg);
+  }
+  .brand-meta { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--muted); margin-left: 6px; letter-spacing: 0.05em; }
+  .icon-btn { margin-left: auto; }
+  .icon-btn, .iconbtn {
+    width: 38px; height: 38px;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px;
+    display: grid; place-items: center;
+    color: var(--ink-2);
+    transition: transform .1s, background-color .15s;
+    box-shadow: var(--shadow-sm);
+  }
+  .iconbtn:active { transform: translateY(1px); }
+  .icon-svg { width: 18px; height: 18px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+
+  /* Module pills — chunky */
+  .modpills {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding: 8px 18px 16px; scroll-snap-type: x mandatory;
+  }
+  .mp {
+    flex-shrink: 0; scroll-snap-align: start;
+    padding: 12px 18px 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    display: flex; flex-direction: column; gap: 4px;
+    text-align: left;
+    min-width: 156px;
+    transition: all .2s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .mp .mp-num { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.05em; }
+  .mp .mp-title { font-size: 13.5px; font-weight: 700; line-height: 1.2; letter-spacing: -0.015em; color: var(--ink); }
+  .mp .mp-prog { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+  .mp .mp-fill { height: 100%; background: var(--module-hue); transition: width .5s; }
+  .mp.active {
+    background: var(--module-hue);
+    border-color: var(--module-hue);
+    color: var(--card-2);
+    transform: scale(1.02) rotate(-1deg);
+    box-shadow: var(--shadow-md);
+  }
+  .mp.active .mp-num, .mp.active .mp-title { color: var(--card-2); }
+  .mp.active .mp-prog { background: rgba(255,255,255,0.25); }
+  .mp.active .mp-fill { background: var(--card-2); }
+
+  /* Module hero — punchy big card */
+  .mod-hero {
+    margin: 6px 18px 16px;
+    padding: 28px 22px 24px;
+    background: var(--module-hue);
+    color: var(--card-2);
+    border-radius: 24px;
+    box-shadow: var(--shadow-md);
+    position: relative; overflow: hidden;
+  }
+  .mod-hero::before {
+    content: ""; position: absolute; bottom: -50px; right: -50px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .mod-hero::after {
+    content: ""; position: absolute; top: -30px; right: 40px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .mod-hero .label { font-family: "JetBrains Mono", monospace; font-size: 11px; opacity: 0.7; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-bottom: 12px; position: relative; }
+  .mod-hero h2 {
+    font-size: clamp(28px, 7vw, 32px);
+    font-weight: 800; line-height: 1.06; letter-spacing: -0.03em;
+    text-wrap: balance; position: relative;
+  }
+  .mod-hero .tag {
+    margin-top: 12px; font-size: 15px; line-height: 1.45; opacity: 0.85;
+    font-weight: 500; position: relative;
+  }
+  .mod-hero .stats { display: flex; gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.18); position: relative; }
+  .mod-hero .stat { flex: 1; }
+  .mod-hero .stat-n { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .mod-hero .stat-l { font-size: 11px; opacity: 0.75; font-weight: 600; }
+
+  /* Lesson card stack */
+  .stack { display: flex; flex-direction: column; gap: 14px; padding: 0 18px; }
+  .lc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 20px 20px 22px;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+    transition: transform .15s ease, box-shadow .15s;
+    position: relative;
+  }
+  .lc:active { transform: scale(0.99); }
+  .lc.done { background: var(--card-2); }
+  .lc.active {
+    background: var(--card-2);
+    box-shadow: var(--shadow-md);
+    border-color: var(--line-strong);
+  }
+  .lc-head { display: flex; align-items: flex-start; gap: 12px; }
+  .lc-num {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: var(--bg); border: 1px solid var(--line);
+    display: grid; place-items: center;
+    font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700;
+    color: var(--ink-2);
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .lc.active .lc-num { background: var(--ink); color: var(--bg); border-color: var(--ink); transform: rotate(-3deg); }
+  .lc.done .lc-num { background: oklch(0.55 0.14 145); color: var(--card-2); border-color: oklch(0.55 0.14 145); }
+  .lc-body { flex: 1; min-width: 0; }
+  .lc-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; font-size: 11px; }
+  .lc-meta span { font-weight: 600; color: var(--muted); }
+  .lc-meta .dot { opacity: .5; }
+  .lc-title { font-size: 17px; font-weight: 700; line-height: 1.2; letter-spacing: -0.015em; color: var(--ink); text-wrap: balance; }
+
+  /* The opened lesson reader (modal-style full screen) */
+  .reader-scrim { position: fixed; inset: 0; z-index: 90; background: rgba(15,12,6,0.65); opacity: 0; pointer-events: none; transition: opacity .25s; backdrop-filter: blur(4px); }
+  .reader-scrim.in { opacity: 1; pointer-events: auto; }
+  .reader {
+    position: fixed; left: 0; right: 0; bottom: 0; top: 4%;
+    z-index: 91;
+    background: var(--bg);
+    border-radius: 28px 28px 0 0;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.2,.85,.25,1);
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+  }
+  .reader.in { transform: translateY(0); }
+  @media (min-width: 800px) {
+    .reader { left: 50%; right: auto; transform: translate(-50%, 100%); max-width: 480px; width: 100%; }
+    .reader.in { transform: translate(-50%, 0); }
+  }
+  .reader-bar {
+    position: sticky; top: 0; z-index: 5;
+    background: color-mix(in oklab, var(--bg) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 12px 16px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .reader-bar-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .reader-grab { width: 36px; height: 4px; background: var(--line-strong); border-radius: 2px; margin: 0 auto 8px; }
+  .reader-bar .crumb { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
+  .reader-bar .crumb b { color: var(--ink); }
+  .reader-progress { display: flex; gap: 3px; }
+  .reader-progress .seg { flex: 1; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .reader-progress .seg .f { height: 100%; background: var(--module-hue); width: 0%; transition: width .3s; }
+
+  /* Reader content */
+  .scene { padding: 28px 22px 12px; }
+  .scene-eyebrow { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--module-hue); font-weight: 700; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .scene-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--module-hue); }
+  .scene-eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .scene h1 {
+    font-size: clamp(30px, 8vw, 38px);
+    font-weight: 800; line-height: 1.04; letter-spacing: -0.035em;
+    color: var(--ink); text-wrap: balance;
+  }
+  .scene .deck { font-size: 16px; color: var(--muted); margin-top: 12px; line-height: 1.45; font-weight: 500; }
+
+  /* Body */
+  .reader-body { padding: 12px 22px 24px; }
+  .reader-body .para { position: relative; margin: 10px 0; transition: opacity .35s ease; }
+  .reader-body .para.dim { opacity: 0.5; }
+  .reader-body .para p { font-size: 17px; line-height: 1.6; color: var(--ink-2); letter-spacing: -0.005em; }
+  .reader-body .para p strong { color: var(--ink); font-weight: 700; }
+  .reader-body .para ul { list-style: none; padding: 4px 0; }
+  .reader-body .para ul li {
+    font-size: 16px; line-height: 1.5; color: var(--ink-2);
+    padding: 6px 0 6px 28px; position: relative;
+  }
+  .reader-body .para ul li::before {
+    content: ""; position: absolute; left: 4px; top: 13px;
+    width: 8px; height: 8px;
+    background: var(--module-hue); border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .reader-body .para .quote {
+    background: var(--card-2);
+    border: 1.5px solid var(--module-hue);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 15.5px; line-height: 1.5;
+    color: var(--ink);
+    font-weight: 500;
+    position: relative;
+    margin: 8px 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13.5px;
+  }
+  .reader-body .para .quote::before {
+    content: "$ prompt"; position: absolute; top: -10px; left: 14px;
+    background: var(--module-hue); color: var(--card-2);
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    padding: 3px 8px; border-radius: 6px; font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  /* Big section heading — colored bar */
+  .reader-body .scene-h {
+    margin: 32px -22px 16px;
+    padding: 24px 22px 18px;
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .reader-body .scene-h::before {
+    content: ""; position: absolute; left: 22px; top: 14px;
+    width: 30px; height: 4px; background: var(--module-hue); border-radius: 2px;
+  }
+  .reader-body .scene-h h3 {
+    margin-top: 18px;
+    font-size: clamp(22px, 5vw, 26px); font-weight: 800;
+    letter-spacing: -0.025em; line-height: 1.1; color: var(--ink); text-wrap: balance;
+  }
+  .reader-body hr {
+    border: none; margin: 28px 0; text-align: center; height: 14px;
+    background-image: radial-gradient(circle, var(--line-strong) 1.5px, transparent 1.5px);
+    background-size: 16px 14px; background-repeat: repeat-x; background-position: center;
+  }
+  /* Tape highlights */
+  .reader-body .para.highlighted p,
+  .reader-body .para.highlighted ul li {
+    background-image: linear-gradient(180deg, transparent 0%, transparent 30%, var(--tape) 30%, var(--tape) 92%, transparent 92%);
+    padding-left: 4px; padding-right: 4px;
+  }
+  /* Tap-to-highlight: long press handled in JS, but add tap button */
+  .hl-btn-mobile {
+    position: absolute; right: -6px; top: 0;
+    width: 30px; height: 30px;
+    background: transparent;
+    color: var(--muted);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    opacity: 0;
+    transition: opacity .2s, color .15s;
+  }
+  .para:active .hl-btn-mobile, .para.highlighted .hl-btn-mobile { opacity: 1; }
+  .para.highlighted .hl-btn-mobile { color: var(--punch); }
+  .hl-btn-mobile:hover { background: var(--card-2); }
+
+  /* Try-prompt callout */
+  .try-it {
+    margin: 22px -22px;
+    padding: 22px 22px;
+    background: var(--ink);
+    color: var(--card-2);
+    border-radius: 0;
+    position: relative;
+  }
+  .try-it h4 {
+    font-size: 11px; letter-spacing: 0.15em; font-family: "JetBrains Mono", monospace;
+    text-transform: uppercase; font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--tape);
+  }
+  .try-it .pr {
+    background: rgba(255,255,255,0.06);
+    border: 1px dashed rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px; line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+  }
+  .try-it .pr-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .try-it .pr-btn {
+    padding: 8px 14px; background: var(--tape); color: var(--ink);
+    border-radius: 999px; font-size: 12px; font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+  .try-it .pr-btn.ghost { background: transparent; color: var(--card-2); border: 1px solid rgba(255,255,255,0.3); }
+
+  /* Quiz card */
+  .quiz {
+    margin: 28px 0 0;
+    background: var(--card-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 20px;
+    padding: 22px 20px 20px;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: rotate(-0.4deg);
+  }
+  .quiz .badge {
+    position: absolute; top: -14px; left: 16px;
+    background: var(--ink); color: var(--bg);
+    font-family: "JetBrains Mono", monospace;
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 11px; letter-spacing: 0.06em; font-weight: 700;
+  }
+  .quiz .q { font-size: 19px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 10px 0 16px; text-wrap: balance; }
+  .quiz .opts { display: flex; flex-direction: column; gap: 8px; }
+  .quiz .opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    text-align: left;
+    font-size: 14px; line-height: 1.4; font-weight: 500;
+    color: var(--ink-2);
+    transition: all .15s;
+  }
+  .quiz .opt:hover { border-color: var(--ink); }
+  .quiz .opt .l {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--card); border: 1.5px solid var(--line);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700; color: var(--ink-2);
+    flex-shrink: 0; margin-top: 1px;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .quiz .opt.correct { background: oklch(0.92 0.08 145); border-color: oklch(0.55 0.13 145); color: var(--ink); }
+  .quiz .opt.correct .l { background: oklch(0.55 0.13 145); color: white; border-color: oklch(0.55 0.13 145); }
+  .quiz .opt.wrong { background: oklch(0.93 0.07 28); border-color: oklch(0.6 0.16 28); }
+  .quiz .opt.wrong .l { background: oklch(0.6 0.16 28); color: white; border-color: oklch(0.6 0.16 28); }
+  .quiz .opt.disabled { opacity: 0.45; pointer-events: none; }
+  .quiz .fb { margin-top: 14px; padding: 12px 14px; background: var(--bg); border-radius: 10px; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); border-left: 3px solid var(--module-hue); }
+  .quiz .fb b { color: var(--ink); }
+
+  /* Footer in reader */
+  .reader-foot {
+    padding: 22px 22px 30px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .complete-pill {
+    padding: 16px; border-radius: 18px;
+    background: var(--ink); color: var(--bg);
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700; font-size: 15px;
+    transition: transform .1s;
+  }
+  .complete-pill:active { transform: scale(0.98); }
+  .complete-pill.done { background: oklch(0.55 0.14 145); }
+  .complete-pill .arrow { margin-left: auto; }
+  .complete-pill .iconcheck { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.18); display: grid; place-items: center; flex-shrink: 0; }
+  .complete-pill.done .iconcheck { background: rgba(255,255,255,0.25); }
+  .reader-foot .ghost { padding: 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); color: var(--ink-2); text-align: center; font-weight: 600; font-size: 14px; }
+
+  /* Bottom tab nav */
+  .tabnav {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px;
+    width: calc(100% - 32px); max-width: 420px;
+    z-index: 60;
+    background: var(--ink); color: var(--bg);
+    border-radius: 24px;
+    display: flex; padding: 6px;
+    box-shadow: var(--shadow-lg);
+  }
+  .tabnav .tab {
+    flex: 1; padding: 12px 8px;
+    border-radius: 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: rgba(255,255,255,0.55);
+    font-size: 10px; font-weight: 600; letter-spacing: 0.02em;
+    transition: all .2s;
+  }
+  .tabnav .tab.active { background: rgba(255,255,255,0.12); color: var(--bg); }
+  .tabnav .tab .ico { width: 18px; height: 18px; }
+  .tabnav .tab.cta {
+    background: var(--module-hue); color: white;
+    flex: 1.4;
+  }
+  .tabnav .tab.cta.done { background: oklch(0.55 0.14 145); }
+
+  /* Bottom sheet generic */
+  .sheet-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 110; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .sheet-scrim.in { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    z-index: 111;
+    max-height: 86vh; overflow-y: auto;
+    background: var(--bg);
+    border-radius: 24px 24px 0 0;
+    transform: translateY(100%);
+    transition: transform .35s cubic-bezier(.2,.85,.25,1);
+    box-shadow: 0 -20px 50px -10px rgba(0,0,0,.4);
+  }
+  .sheet.in { transform: translateY(0); }
+  @media (min-width: 800px) {
+    .sheet { max-width: 480px; left: 50%; transform: translate(-50%, 100%); }
+    .sheet.in { transform: translate(-50%, 0); }
+  }
+  .sheet-grab { width: 42px; height: 4px; background: var(--line-strong); border-radius: 2px; margin: 10px auto 0; }
+  .sheet h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.025em; padding: 16px 22px 6px; }
+  .sheet .sub { font-size: 13px; color: var(--muted); padding: 0 22px 14px; font-weight: 500; }
+
+  /* Stats sheet content */
+  .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    padding: 6px 18px 14px;
+  }
+  .stat-tile {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .stat-tile .n { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .stat-tile .l { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+  .stat-tile.big {
+    grid-column: span 2;
+    background: var(--ink); color: var(--bg);
+    border-color: var(--ink);
+  }
+  .stat-tile.big .n { font-size: 56px; }
+  .stat-tile.big .l { color: rgba(255,255,255,0.7); }
+
+  .module-prog {
+    margin: 4px 18px 14px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 14px;
+  }
+  .mod-prog-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+  .mod-prog-row .n { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); width: 24px; }
+  .mod-prog-row .t { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; }
+  .mod-prog-row .b { width: 100px; height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .mod-prog-row .f { height: 100%; background: var(--module-hue); border-radius: 3px; }
+  .mod-prog-row .pct { font-size: 11px; font-family: "JetBrains Mono", monospace; color: var(--muted); width: 36px; text-align: right; }
+
+  /* Notes (highlights) */
+  .note { padding: 16px 22px; border-top: 1px solid var(--line); }
+  .note .t { font-size: 14.5px; line-height: 1.55; color: var(--ink); padding: 1px 6px; background-image: linear-gradient(180deg, transparent 0%, transparent 30%, var(--tape) 30%, var(--tape) 92%, transparent 92%); display: inline; }
+  .note .l { font-size: 11px; color: var(--muted); margin-top: 8px; font-family: "JetBrains Mono", monospace; }
+
+  /* Share card */
+  .share-host { padding: 16px 22px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .share-card {
+    width: 100%; max-width: 320px; aspect-ratio: 4/5;
+    background: var(--module-hue); color: var(--card-2);
+    border-radius: 22px; padding: 28px 22px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+  }
+  .share-card::before { content: ""; position: absolute; bottom: -60px; right: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.16); }
+  .share-card::after { content: ""; position: absolute; top: 30px; left: -30px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+  .share-card .top { font-family: "JetBrains Mono", monospace; font-size: 11px; opacity: 0.75; letter-spacing: 0.12em; position: relative; }
+  .share-card .ttl { font-size: 24px; font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; position: relative; text-wrap: balance; }
+  .share-card .ft { font-size: 12px; opacity: 0.7; position: relative; font-weight: 500; }
+  .share-actions { display: flex; gap: 8px; width: 100%; }
+  .share-actions button { flex: 1; padding: 12px; border-radius: 14px; font-weight: 700; font-size: 13px; }
+  .share-actions .primary { background: var(--ink); color: var(--bg); }
+  .share-actions .secondary { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Confetti */
+  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
+  .confetti span {
+    position: absolute; top: -16px;
+    animation: fall 1.8s cubic-bezier(.4,.2,.6,1) forwards;
+  }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+  /* "Just completed" big celebration */
+  .celebrate-card {
+    margin: 0 22px 18px;
+    padding: 24px 22px;
+    background: var(--module-hue); color: var(--card-2);
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    animation: pop .6s cubic-bezier(.25,1.4,.5,1);
+  }
+  @keyframes pop { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .celebrate-card .emoji { font-size: 38px; display: block; margin-bottom: 8px; }
+  .celebrate-card h3 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .celebrate-card p { font-size: 14px; opacity: 0.85; line-height: 1.4; }
+
+  /* Tapped paragraph subtle scale on tap (mobile micro-interaction) */
+  .para.tap-flash { animation: tap .35s; }
+  @keyframes tap { 50% { background-color: color-mix(in oklab, var(--tape) 30%, transparent); border-radius: 4px; } }
+
+  /* ─── Desktop sidebar — hidden by default (mobile) ────────────────── */
+  .desk-side { display: none; }
+
+  /* ─── Desktop layout (≥ 880px) ────────────────────────────────────── */
+  @media (min-width: 880px) {
+    body { padding-bottom: 28px; }
+    .stage {
+      max-width: 1280px;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 32px;
+      padding: 28px 36px 48px;
+      align-items: start;
+    }
+    /* Hide mobile chrome */
+    .brand-bar, .modpills, .tabnav { display: none; }
+
+    /* Show desktop sidebar */
+    .desk-side {
+      display: flex;
+      flex-direction: column;
+      position: sticky; top: 28px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 20px 16px 16px;
+      max-height: calc(100vh - 56px);
+      overflow-y: auto;
+      box-shadow: var(--shadow-sm);
+    }
+    .desk-side::-webkit-scrollbar { width: 0; }
+    .ds-brand { display: flex; align-items: center; gap: 12px; padding: 4px 6px 18px; border-bottom: 1px solid var(--line); }
+    .ds-brand .brand-mark { width: 40px; height: 40px; border-radius: 12px; font-size: 18px; }
+    .ds-name-block { flex: 1; min-width: 0; }
+    .ds-name { font-size: 15px; font-weight: 800; letter-spacing: -0.015em; color: var(--ink); }
+    .ds-amp { font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: 0; margin-left: 4px; }
+    .ds-sub { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 0.04em; }
+
+    .ds-overall { padding: 16px 6px 14px; border-bottom: 1px solid var(--line); }
+    .ds-overall-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .ds-overall-pct { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: var(--ink); font-feature-settings: "ss01"; }
+    .ds-overall-l { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 500; line-height: 1.3; }
+    .ds-theme {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: var(--bg); border: 1px solid var(--line);
+      display: grid; place-items: center; color: var(--ink-2);
+      transition: background-color .15s, transform .1s;
+    }
+    .ds-theme:hover { background: var(--card-2); }
+    .ds-theme:active { transform: scale(.95); }
+    .ds-overall-bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+    .ds-overall-fill { height: 100%; background: var(--ink); border-radius: 2px; transition: width .6s cubic-bezier(.2,.7,.2,1); }
+
+    .ds-mods-label { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 16px 6px 8px; }
+    .ds-mods { display: flex; flex-direction: column; gap: 2px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    .ds-mod {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      text-align: left;
+      transition: background-color .15s;
+      width: 100%;
+    }
+    .ds-mod:hover { background: var(--bg); }
+    .ds-mod.active { background: var(--bg); }
+    .ds-mod-n {
+      font-family: "JetBrains Mono", monospace; font-size: 10px;
+      width: 24px; height: 24px; border-radius: 6px;
+      background: var(--card-2); color: var(--ink-2);
+      display: grid; place-items: center;
+      font-weight: 700; flex-shrink: 0;
+      letter-spacing: 0.02em;
+      transition: all .15s;
+    }
+    .ds-mod.active .ds-mod-n { background: var(--ink); color: var(--bg); }
+    .ds-mod-body { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+    .ds-mod-t { font-size: 12.5px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); }
+    .ds-mod-prog { display: block; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 2px; }
+    .ds-mod-fill { display: block; height: 100%; transition: width .5s; }
+    .ds-mod-meta { font-size: 10px; color: var(--muted); font-family: "JetBrains Mono", monospace; }
+
+    .ds-actions { display: flex; flex-direction: column; gap: 2px; padding-top: 12px; }
+    .ds-act {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; color: var(--ink-2);
+      text-align: left;
+      transition: background-color .15s, color .15s;
+      width: 100%;
+    }
+    .ds-act:hover { background: var(--bg); color: var(--ink); }
+    .ds-act .ico { width: 16px; height: 16px; color: var(--muted); display: inline-flex; }
+    .ds-act:hover .ico { color: var(--ink); }
+
+    /* Main column */
+    .main-col { min-width: 0; display: flex; flex-direction: column; gap: 0; }
+
+    /* Reading mode toggles which area is visible */
+    .stage:not(.reading) .reader { display: none; }
+    .stage.reading .home-content { display: none; }
+
+    /* Module hero: more room, bigger */
+    .mod-hero {
+      margin: 0 0 22px;
+      padding: 40px 38px 32px;
+      border-radius: 28px;
+    }
+    .mod-hero h2 { font-size: 44px; line-height: 1.04; }
+    .mod-hero .tag { font-size: 17px; max-width: 620px; margin-top: 16px; }
+    .mod-hero .stats { gap: 36px; margin-top: 24px; padding-top: 20px; }
+    .mod-hero .stat-n { font-size: 30px; }
+    .mod-hero .stat-l { font-size: 12px; }
+
+    /* Lesson stack as 2-column grid */
+    .stack {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      padding: 0;
+    }
+    .lc { padding: 22px 22px 20px; }
+    .lc-title { font-size: 17px; line-height: 1.2; }
+    .lc-num { width: 38px; height: 38px; border-radius: 12px; font-size: 12px; }
+    .lc-meta { gap: 4px 8px; }
+    .lc-meta span { white-space: nowrap; }
+
+    /* Reader — inline, no modal */
+    .reader-scrim { display: none !important; }
+    .reader {
+      position: relative !important;
+      inset: auto !important;
+      top: auto !important; left: 0 !important; right: 0 !important; bottom: auto !important;
+      transform: none !important;
+      width: auto !important;
+      max-width: none !important;
+      border-radius: 28px;
+      overflow: visible;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      max-height: none;
+      margin: 0;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .reader-bar {
+      position: sticky; top: 28px;
+      border-radius: 28px 28px 0 0;
+      background: color-mix(in oklab, var(--card-2) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 32px 16px;
+      z-index: 5;
+    }
+    .reader-grab { display: none; }
+    .reader-bar-top { margin-bottom: 12px; }
+    .reader-bar-top .crumb { font-size: 12px; }
+    .reader-bar-top .crumb b { color: var(--ink); }
+    .scene { padding: 44px 36px 16px; max-width: 760px; }
+    .scene h1 { font-size: 44px; line-height: 1.04; }
+    .scene .deck { font-size: 17px; }
+    .reader-body { padding: 14px 36px 30px; max-width: 760px; }
+    .reader-body .para p { font-size: 17.5px; line-height: 1.65; }
+    .reader-body .scene-h { margin: 40px -36px 18px; padding: 26px 36px 20px; }
+    .reader-body .scene-h h3 { font-size: 28px; }
+    .reader-body .try-it { margin: 28px -36px; padding: 28px 36px; }
+    .reader-body .quiz { margin-top: 36px; }
+    .reader-foot { padding: 28px 36px 38px; flex-direction: row; gap: 14px; }
+    .reader-foot .complete-pill { flex: 1; }
+    .reader-foot .ghost { width: auto; padding: 16px 28px; flex: 0 0 auto; }
+
+    /* Sheets become centered modals */
+    .sheet {
+      position: fixed;
+      left: 50% !important;
+      right: auto !important;
+      bottom: auto !important;
+      top: 50% !important;
+      max-width: 560px;
+      width: calc(100% - 64px);
+      max-height: 80vh;
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      transform: translate(-50%, -50%) scale(0.96) !important;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .3s cubic-bezier(.2,.85,.25,1), opacity .25s;
+    }
+    .sheet.in {
+      transform: translate(-50%, -50%) scale(1) !important;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sheet-grab { display: none; }
+    .sheet h2 { padding-top: 24px; }
+  }
+
+  /* ─── Wide desktop (≥ 1400px) — add a touch more room ─────────────── */
+  @media (min-width: 1400px) {
+    .stage { max-width: 1340px; grid-template-columns: 320px minmax(0, 1fr); gap: 36px; }
+    .mod-hero { padding: 48px 44px 36px; }
+    .mod-hero h2 { font-size: 52px; }
+    .scene h1 { font-size: 52px; }
+  }
+
+  /* ─── Tarjeta imprimible ────────────────────────────────────────────── */
+  .print-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn .2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .print-modal {
+    background: #F5EDD8;
+    border-radius: 20px;
+    width: 100%; max-width: 420px;
+    overflow: hidden;
+    box-shadow: 0 32px 64px -16px rgba(0,0,0,0.4);
+    animation: slideUp .25s cubic-bezier(.2,.8,.3,1);
+    font-family: "JetBrains Mono", monospace;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .print-modal-head {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(21,17,10,0.12);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+  }
+  .print-modal-label {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #756945; margin-bottom: 4px; font-weight: 700;
+  }
+  .print-modal-title {
+    font-family: "Instrument Serif", serif;
+    font-size: 19px; font-style: italic; color: #15110A; line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .print-modal-body { padding: 16px 20px; }
+  .print-modal-body ul { list-style: none; }
+  .print-modal-body ul li {
+    font-size: 12px; color: #3B2F1A; padding: 7px 0;
+    display: flex; gap: 10px; line-height: 1.45;
+    border-bottom: 1px solid rgba(21,17,10,0.08);
+  }
+  .print-modal-body ul li:last-child { border-bottom: none; }
+  .print-modal-body ul li::before { content: "—"; color: #A0906A; flex-shrink: 0; }
+  .print-modal-foot {
+    padding: 12px 20px 16px;
+    border-top: 1px solid rgba(21,17,10,0.10);
+    display: flex; gap: 8px; justify-content: flex-end; align-items: center;
+  }
+  .print-modal-url { font-size: 10px; color: #A0906A; flex: 1; letter-spacing: 0.03em; }
+  .print-btn-ghost {
+    padding: 9px 16px; border-radius: 10px;
+    border: 1px solid rgba(21,17,10,0.2);
+    background: none; color: #756945;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: "JetBrains Mono", monospace;
+    transition: background .15s;
+  }
+  .print-btn-ghost:hover { background: rgba(21,17,10,0.05); }
+  .print-btn-main {
+    padding: 9px 18px; border-radius: 10px;
+    background: #15110A; color: #F5EDD8;
+    border: none; font-size: 12px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.02em;
+    font-family: "JetBrains Mono", monospace;
+    transition: opacity .15s;
+  }
+  .print-btn-main:hover { opacity: 0.85; }
+  /* Botón tarjeta en reader-foot */
+  .card-btn {
+    padding: 14px 16px; border-radius: 16px;
+    background: var(--card); border: 1px solid var(--line);
+    color: var(--ink-2); font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: background .15s;
+    white-space: nowrap;
+  }
+  .card-btn:hover { background: var(--card-2); }
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="data.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+const I = {
+  sun: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>,
+  moon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+  share: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+  notes: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>,
+  arrow: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+  close: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>,
+  home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a1 1 0 0 1-1-1v-6h-4v6a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2z"/></svg>,
+  print: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
+  stats: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+};
+
+
+const [printLesson, setPrintLesson] = useState(null);
+
+const openPrintCard = () => {
+  const mod = COURSE.modules.find(m => m.id === activeMod);
+  const les = mod && mod.lessons[activeLes];
+  if (les && les.printable) setPrintLesson(les);
+};
+
+const doPrint = (lesson) => {
+  const w = window.open('', '_blank');
+  w.document.write(`<!doctype html><html><head>
+<meta charset="utf-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+@page { size: 148mm 105mm; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'JetBrains Mono', monospace; background: white; width: 148mm; height: 105mm; padding: 14px 18px; display: flex; flex-direction: column; }
+.lbl { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 5px; }
+.ttl { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 16px; color: #15110A; line-height: 1.2; border-bottom: 1px solid #ddd; padding-bottom: 9px; margin-bottom: 10px; }
+ul { list-style: none; flex: 1; }
+li { font-size: 10.5px; color: #333; padding: 5px 0; display: flex; gap: 8px; line-height: 1.4; border-bottom: 1px solid #f0f0f0; }
+li:last-child { border-bottom: none; }
+li::before { content: '—'; color: #aaa; flex-shrink: 0; }
+.foot { font-size: 8.5px; color: #bbb; border-top: 1px solid #eee; padding-top: 7px; margin-top: 8px; display: flex; justify-content: space-between; }
+</style></head><body>
+<div class="lbl">Claude ABC para Creativos</div>
+<div class="ttl">${lesson.printable.title}</div>
+<ul>${lesson.printable.points.map(p => `<li>${p}</li>`).join('')}</ul>
+<div class="foot"><span>${lesson.title}</span><span>claudeparacreativxs.com</span></div>
+</body></html>`);
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+};
+
+function useLocalState(key, initial) {
+  const [v, setV] = useState(() => {
+    try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : initial; } catch { return initial; }
+  });
+  useEffect(() => { try { localStorage.setItem(key, JSON.stringify(v)); } catch {} }, [key, v]);
+  return [v, setV];
+}
+
+function renderLessonBlocks(text) {
+  const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  return blocks.map((block, i) => {
+    if (/^\*\*[^*]+\*\*$/.test(block)) return { type: "h3", text: block.slice(2, -2), key: i };
+    if (block.startsWith("*") && block.endsWith("*") && !block.startsWith("**")) return { type: "quote", text: block.slice(1, -1), key: i };
+    if (block.split("\n").every(l => /^[-✓✗]\s/.test(l.trim()))) return { type: "ul", items: block.split("\n").map(l => l.replace(/^[-✓✗]\s/, "")), key: i };
+    if (block === "---") return { type: "hr", key: i };
+    return { type: "p", text: block, key: i };
+  });
+}
+function inlineFormat(s) {
+  const parts = []; let rest = s; let idx = 0;
+  while (rest.length) {
+    const m = rest.match(/\*\*(.+?)\*\*/);
+    if (!m) { parts.push(<span key={idx++}>{rest}</span>); break; }
+    if (m.index > 0) parts.push(<span key={idx++}>{rest.slice(0, m.index)}</span>);
+    parts.push(<strong key={idx++}>{m[1]}</strong>);
+    rest = rest.slice(m.index + m[0].length);
+  }
+  return parts;
+}
+
+const allLessonsFlat = (() => {
+  const out = [];
+  COURSE.modules.forEach((m, mi) => m.lessons.forEach((l, li) => out.push({ ...l, _m: mi, _l: li, _module: m })));
+  return out;
+})();
+
+function App() {
+  const [theme, setTheme] = useLocalState("d3-theme", "light");
+  const [activeModule, setActiveModule] = useLocalState("d3-mod", 0);
+  const [completed, setCompleted] = useLocalState("d3-completed", []);
+  const [highlights, setHighlights] = useLocalState("d3-highlights", {});
+  const [quizState, setQuizState] = useLocalState("d3-quiz", {});
+  const [reader, setReader] = useState(null); // lessonId or null
+  const [sheet, setSheet] = useState(null); // 'stats' | 'notes' | 'share'
+  const [confetti, setConfetti] = useState(false);
+  const [tapFlash, setTapFlash] = useState(null);
+  const [readPct, setReadPct] = useState(0);
+
+  useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
+
+  const mod = COURSE.modules[activeModule];
+  // module hue color
+  useEffect(() => {
+    const c = `oklch(0.62 0.14 ${mod.hue})`;
+    document.documentElement.style.setProperty("--module-hue", c);
+  }, [mod.hue]);
+
+  const readerLesson = reader ? allLessonsFlat.find(l => l.id === reader) : null;
+  const readerMod = readerLesson ? COURSE.modules[readerLesson._m] : null;
+  const readerLi = readerLesson ? readerLesson._l : 0;
+  const readerBlocks = useMemo(() => readerLesson ? renderLessonBlocks(readerLesson.content) : [], [readerLesson]);
+  const readerKey = readerLesson?.id;
+  const readerHL = readerLesson ? (highlights[readerKey] || []) : [];
+  const readerQz = readerLesson ? quizState[readerKey] : null;
+  const readerIsComp = readerLesson ? completed.includes(readerKey) : false;
+
+  // Scroll reveal + reader progress
+  useEffect(() => {
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach(e => { if (e.isIntersecting) e.target.classList.add("in"); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+    const isDesktop = () => window.matchMedia("(min-width: 880px)").matches;
+    const onReaderScroll = (e) => {
+      const t = e.target;
+      const max = t.scrollHeight - t.clientHeight;
+      if (max > 0) setReadPct(Math.min(1, Math.max(0, t.scrollTop / max)));
+    };
+    const onWindowScroll = () => {
+      if (!isDesktop() || !reader) return;
+      const r = document.querySelector(".reader");
+      if (!r) return;
+      const rect = r.getBoundingClientRect();
+      const max = rect.height - window.innerHeight;
+      if (max > 0) {
+        const passed = -rect.top;
+        setReadPct(Math.min(1, Math.max(0, passed / max)));
+      }
+    };
+    const r = document.querySelector(".reader");
+    if (r) r.addEventListener("scroll", onReaderScroll, { passive: true });
+    window.addEventListener("scroll", onWindowScroll, { passive: true });
+    return () => {
+      io.disconnect();
+      if (r) r.removeEventListener("scroll", onReaderScroll);
+      window.removeEventListener("scroll", onWindowScroll);
+    };
+  }, [reader, readerLesson]);
+
+  useEffect(() => {
+    if (reader) {
+      const r = document.querySelector(".reader");
+      if (r) r.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: "instant" });
+      setReadPct(0);
+    }
+  }, [reader]);
+
+  const fire = () => { setConfetti(true); setTimeout(() => setConfetti(false), 1900); };
+  const openLesson = (id) => setReader(id);
+  const closeReader = () => setReader(null);
+  const markComplete = () => {
+    if (!readerIsComp) { setCompleted([...completed, readerKey]); fire(); }
+    const next = allLessonsFlat[allLessonsFlat.findIndex(l => l.id === readerKey) + 1];
+    setTimeout(() => {
+      if (next) setReader(next.id);
+      else setReader(null);
+    }, 600);
+  };
+  const tapHighlight = (i) => {
+    setTapFlash(i);
+    setTimeout(() => setTapFlash(null), 380);
+    const list = readerHL.includes(i) ? readerHL.filter(x => x !== i) : [...readerHL, i];
+    setHighlights({ ...highlights, [readerKey]: list });
+  };
+  const answer = (i) => {
+    if (readerQz) return;
+    const correct = i === readerLesson.quiz.correct;
+    setQuizState({ ...quizState, [readerKey]: { selected: i, correct } });
+    if (correct) fire();
+  };
+
+  const compCount = completed.length;
+  const total = allLessonsFlat.length;
+  const overallPct = compCount / total;
+  const modProgress = (mod_) => {
+    const done = mod_.lessons.filter(l => completed.includes(l.id)).length;
+    return done / mod_.lessons.length;
+  };
+  // streak (consecutive completed from start)
+  const streak = (() => {
+    let s = 0;
+    for (const l of allLessonsFlat) {
+      if (completed.includes(l.id)) s++; else break;
+    }
+    return s;
+  })();
+
+  const totalMin = mod.lessons.reduce((a, l) => a + l.minutes, 0);
+
+  return (
+    <div className={"stage " + (reader ? "reading " : "") + (theme === "dark" ? "is-dark" : "")}>
+
+      {/* Desktop-only sidebar */}
+      <aside className="desk-side">
+        <div className="ds-brand">
+          <span className="brand-mark">C</span>
+          <div className="ds-name-block">
+            <div className="ds-name">ABC <span className="ds-amp">para creativos</span></div>
+            <div className="ds-sub">Curso gratis · 4 módulos</div>
+          </div>
+        </div>
+        <div className="ds-overall">
+          <div className="ds-overall-row">
+            <div>
+              <div className="ds-overall-pct">{Math.round(overallPct * 100)}<span style={{ fontSize: 16, opacity: 0.6 }}>%</span></div>
+              <div className="ds-overall-l">{compCount} de {total} · racha de {streak} 🔥</div>
+            </div>
+            <button className="ds-theme" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+              {theme === "light" ? I.moon : I.sun}
+            </button>
+          </div>
+          <div className="ds-overall-bar"><div className="ds-overall-fill" style={{ width: `${overallPct * 100}%` }} /></div>
+        </div>
+        <div className="ds-mods-label">Módulos</div>
+        <div className="ds-mods">
+          {COURSE.modules.map((m, mi) => {
+            const p = modProgress(m);
+            const isAct = mi === activeModule;
+            return (
+              <button key={m.id} className={"ds-mod " + (isAct ? "active" : "")} onClick={() => { setActiveModule(mi); if (reader) closeReader(); }}>
+                <span className="ds-mod-n">{m.num}</span>
+                <span className="ds-mod-body">
+                  <span className="ds-mod-t">{m.title.split(":")[0]}</span>
+                  <span className="ds-mod-prog"><span className="ds-mod-fill" style={{ width: `${p * 100}%`, background: `oklch(0.62 0.14 ${m.hue})` }} /></span>
+                  <span className="ds-mod-meta">{m.lessons.filter(l => completed.includes(l.id)).length} / {m.lessons.length} lecciones</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="ds-actions">
+          <button className="ds-act" onClick={() => setSheet("stats")}><span className="ico">{I.stats}</span> Progreso</button>
+          <button className="ds-act" onClick={() => setSheet("notes")}><span className="ico">{I.notes}</span> Highlights ({Object.values(highlights).flat().length})</button>
+          <button className="ds-act" onClick={() => setSheet("share")}><span className="ico">{I.share}</span> Compartir</button>
+        </div>
+      </aside>
+
+      {/* Main column */}
+      <div className="main-col">
+
+      <div className="brand-bar">
+        <span className="brand">
+          <span className="brand-mark">C</span>
+          ABC<span className="brand-meta">para creativos</span>
+        </span>
+        <button className="iconbtn icon-btn" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+          {theme === "light" ? I.moon : I.sun}
+        </button>
+      </div>
+
+      {/* Home content (mod pills + hero + stack) — hidden when reading on desktop */}
+      <div className="home-content">
+
+      {/* Module pills */}
+      <div className="modpills">
+        {COURSE.modules.map((m, mi) => (
+          <button key={m.id} className={"mp " + (mi === activeModule ? "active" : "")} onClick={() => setActiveModule(mi)}>
+            <span className="mp-num">MÓD {m.num}</span>
+            <span className="mp-title">{m.title.split(":")[0].slice(0, 32)}</span>
+            <span className="mp-prog"><span className="mp-fill" style={{ width: `${modProgress(m) * 100}%` }} /></span>
+          </button>
+        ))}
+      </div>
+
+      {/* Module hero */}
+      <div className="mod-hero">
+        <div className="label">Módulo {mod.num}</div>
+        <h2>{mod.title}</h2>
+        <p className="tag">{mod.tagline}</p>
+        <div className="stats">
+          <div className="stat">
+            <div className="stat-n">{mod.lessons.length}</div>
+            <div className="stat-l">lecciones</div>
+          </div>
+          <div className="stat">
+            <div className="stat-n">{totalMin}</div>
+            <div className="stat-l">minutos</div>
+          </div>
+          <div className="stat">
+            <div className="stat-n">{Math.round(modProgress(mod) * 100)}%</div>
+            <div className="stat-l">completado</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Lesson stack */}
+      <div className="stack">
+        {mod.lessons.map((l, li) => {
+          const done = completed.includes(l.id);
+          // active = first incomplete
+          const isActive = !done && mod.lessons.slice(0, li).every(p => completed.includes(p.id));
+          return (
+            <button key={l.id}
+              className={"lc reveal " + (done ? "done " : "") + (isActive ? "active" : "")}
+              onClick={() => openLesson(l.id)}>
+              <div className="lc-head">
+                <div className="lc-num">{done ? I.check : String(li + 1).padStart(2, "0")}</div>
+                <div className="lc-body">
+                  <div className="lc-meta">
+                    <span>{l.type}</span>
+                    <span className="dot">·</span>
+                    <span>{l.minutes} min</span>
+                    {l.usable && <><span className="dot">·</span><span style={{ color: "var(--module-hue)", fontWeight: 700 }}>practicable</span></>}
+                  </div>
+                  <div className="lc-title">{l.title}</div>
+                </div>
+                {!done && <div style={{ color: "var(--muted)" }}>{I.arrow}</div>}
+              </div>
+              {isActive && (
+                <div style={{ marginTop: 14, padding: "10px 12px", background: "var(--bg)", borderRadius: 10, fontSize: 12, color: "var(--ink-2)", fontWeight: 500, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: "var(--module-hue)", fontWeight: 700 }}>▸ Continuar</span>
+                  <span style={{ opacity: 0.6 }}>tocá para abrir la lección</span>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      </div>{/* /home-content */}
+
+      {/* Bottom tab nav */}
+      <div className="tabnav">
+        <button className="tab active">
+          <span className="ico">{I.home}</span>
+          Curso
+        </button>
+        <button className="tab" onClick={() => setSheet("stats")}>
+          <span className="ico">{I.stats}</span>
+          Progreso
+        </button>
+        <button className="tab" onClick={() => setSheet("notes")}>
+          <span className="ico">{I.notes}</span>
+          Notas
+        </button>
+        <button className={"tab cta " + (overallPct === 1 ? "done" : "")} onClick={() => {
+          // continue from first incomplete
+          const next = allLessonsFlat.find(l => !completed.includes(l.id));
+          if (next) openLesson(next.id);
+        }}>
+          <span className="ico">{I.arrow}</span>
+          {compCount === 0 ? "Empezar" : compCount === total ? "Final" : "Seguir"}
+        </button>
+      </div>
+
+      {/* Reader */}
+      <div className={"reader-scrim " + (reader ? "in" : "")} onClick={closeReader} />
+      <div className={"reader " + (reader ? "in" : "")}>
+        {readerLesson && (
+          <>
+            <div className="reader-bar">
+              <div className="reader-grab"></div>
+              <div className="reader-bar-top">
+                <button className="iconbtn" onClick={closeReader}>{I.close}</button>
+                <div style={{ flex: 1 }}>
+                  <div className="crumb">Mód {readerMod.num} · Lección {readerLi + 1}/{readerMod.lessons.length}</div>
+                </div>
+                <button className="iconbtn" onClick={() => setSheet("share")}>{I.share}</button>
+              </div>
+              <div className="reader-progress">
+                {readerMod.lessons.map((l, i) => (
+                  <div key={l.id} className="seg">
+                    <div className="f" style={{ width: i < readerLi ? "100%" : i === readerLi ? `${readPct * 100}%` : "0%" }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="scene">
+              <div className="scene-eyebrow">{readerLesson.type} · {readerLesson.minutes} min</div>
+              <h1>{readerLesson.title}</h1>
+              <p className="deck">{readerMod.tagline}</p>
+            </div>
+
+            <div className="reader-body">
+              {readerBlocks.map((b, i) => {
+                const isHL = readerHL.includes(i);
+                const flash = tapFlash === i ? " tap-flash" : "";
+                if (b.type === "h3") {
+                  return (
+                    <div key={i} className="scene-h reveal">
+                      <h3>{b.text}</h3>
+                    </div>
+                  );
+                }
+                return (
+                  <div key={i} className={"para reveal " + (isHL ? "highlighted " : "") + flash} onClick={(e) => { if (!e.target.closest('button')) tapHighlight(i); }}>
+                    {b.type === "p" && <p>{inlineFormat(b.text)}</p>}
+                    {b.type === "ul" && <ul>{b.items.map((it, j) => <li key={j}>{inlineFormat(it)}</li>)}</ul>}
+                    {b.type === "quote" && <div className="quote">{b.text}</div>}
+                    {b.type === "hr" && <hr />}
+                  </div>
+                );
+              })}
+
+              {/* Try-it callout if practice */}
+              {readerLesson.usable && (
+                <div className="try-it reveal">
+                  <h4>★ probalo ahora</h4>
+                  <div className="pr">
+                    Soy [tu profesión] y estoy trabajando en [proyecto]. Ayudame a {readerLesson.title.toLowerCase().replace(/^[a-z]/, c => c.toLowerCase())}.
+                  </div>
+                  <div className="pr-actions">
+                    <button className="pr-btn" onClick={() => navigator.clipboard?.writeText("Soy [tu profesión]...")}>Copiar prompt</button>
+                    <button className="pr-btn ghost">Abrir Claude →</button>
+                  </div>
+                </div>
+              )}
+
+              {/* Quiz */}
+              <div className="quiz reveal">
+                <div className="badge">Quiz · 1 pregunta</div>
+                <div className="q">{readerLesson.quiz.question}</div>
+                <div className="opts">
+                  {readerLesson.quiz.options.map((opt, i) => {
+                    const isAns = readerQz && readerQz.selected === i;
+                    const correct = readerLesson.quiz.correct;
+                    let cls = "opt";
+                    if (readerQz) {
+                      if (i === correct) cls += " correct";
+                      else if (isAns) cls += " wrong";
+                      else cls += " disabled";
+                    }
+                    return (
+                      <button key={i} className={cls} onClick={() => answer(i)}>
+                        <span className="l">{readerQz && i === correct ? I.check : String.fromCharCode(65+i)}</span>
+                        <span>{opt}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {readerQz && (
+                  <div className="fb">
+                    {readerQz.correct ? <><b>✓ Correcto.</b> {readerLesson.quiz.feedback}</> : <><b>Mmm.</b> La correcta era <b>{String.fromCharCode(65+readerLesson.quiz.correct)}</b>. {readerLesson.quiz.feedback}</>}
+                  </div>
+                )}
+              </div>
+
+              {readerIsComp && (
+                <div className="celebrate-card">
+                  <span className="emoji">✦</span>
+                  <h3>Lección completada</h3>
+                  <p>{compCount} de {total} · racha de {streak} 🔥</p>
+                </div>
+              )}
+
+              <div className="reader-foot">
+                <button className={"complete-pill " + (readerIsComp ? "done" : "")} onClick={markComplete}>
+                  <span className="iconcheck">{I.check}</span>
+                  {readerIsComp ? "Siguiente lección" : "Marcar como completada"}
+                  <span className="arrow">{I.arrow}</span>
+                </button>
+                {activeLes !== null && COURSE.modules[activeMod]?.lessons[activeLes]?.printable && (<button className="card-btn" onClick={openPrintCard}>{I.print} Tarjeta</button>)}<button className="ghost" onClick={closeReader}>Volver al curso</button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      </div>{/* /main-col */}
+
+      
+      {printLesson && (
+        <div className="print-overlay" onClick={() => setPrintLesson(null)}>
+          <div className="print-modal" onClick={e => e.stopPropagation()}>
+            <div className="print-modal-head">
+              <div>
+                <div className="print-modal-label">Tarjeta imprimible — A6</div>
+                <div className="print-modal-title">{printLesson.printable.title}</div>
+              </div>
+              <button className="iconbtn" onClick={() => setPrintLesson(null)}>{I.close}</button>
+            </div>
+            <div className="print-modal-body">
+              <ul>
+                {printLesson.printable.points.map((p, i) => (
+                  <li key={i}>{p}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="print-modal-foot">
+              <span className="print-modal-url">claudeparacreativxs.com</span>
+              <button className="print-btn-ghost" onClick={() => setPrintLesson(null)}>Cerrar</button>
+              <button className="print-btn-main" onClick={() => doPrint(printLesson)}>Imprimir ↗</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sheets */}
+      <div className={"sheet-scrim " + (sheet ? "in" : "")} onClick={() => setSheet(null)} />
+      <div className={"sheet " + (sheet === "stats" ? "in" : "")}>
+        <div className="sheet-grab"></div>
+        <h2>Tu progreso</h2>
+        <div className="sub">{compCount} de {total} lecciones completadas</div>
+        <div className="stat-grid">
+          <div className="stat-tile big">
+            <div className="n">{Math.round(overallPct * 100)}<span style={{ fontSize: "0.5em", opacity: 0.6 }}>%</span></div>
+            <div className="l">del curso completado</div>
+          </div>
+          <div className="stat-tile">
+            <div className="n">{streak} 🔥</div>
+            <div className="l">racha sin saltar</div>
+          </div>
+          <div className="stat-tile">
+            <div className="n">{Object.values(highlights).flat().length}</div>
+            <div className="l">highlights guardados</div>
+          </div>
+          <div className="stat-tile">
+            <div className="n">{Object.values(quizState).filter(q => q.correct).length}</div>
+            <div className="l">quizzes acertados</div>
+          </div>
+          <div className="stat-tile">
+            <div className="n">{allLessonsFlat.filter(l => completed.includes(l.id)).reduce((a, l) => a + l.minutes, 0)}</div>
+            <div className="l">minutos de lectura</div>
+          </div>
+        </div>
+        <div className="module-prog">
+          {COURSE.modules.map(m => {
+            const d = m.lessons.filter(l => completed.includes(l.id)).length;
+            const p = d / m.lessons.length;
+            return (
+              <div key={m.id} className="mod-prog-row">
+                <span className="n">{m.num}</span>
+                <span className="t">{m.title.split(":")[0].slice(0, 30)}</span>
+                <span className="b"><span className="f" style={{ width: `${p * 100}%` }} /></span>
+                <span className="pct">{d}/{m.lessons.length}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ height: 30 }} />
+      </div>
+
+      <div className={"sheet " + (sheet === "notes" ? "in" : "")}>
+        <div className="sheet-grab"></div>
+        <h2>Tus highlights</h2>
+        <div className="sub">tocá un párrafo en una lección para marcarlo</div>
+        {Object.entries(highlights).filter(([, v]) => v && v.length).length === 0 ? (
+          <div style={{ padding: "30px 22px", textAlign: "center", color: "var(--muted)", fontSize: 14 }}>
+            Aún no guardaste ningún highlight.
+          </div>
+        ) : (
+          Object.entries(highlights).flatMap(([lid, idxs]) => {
+            const les = allLessonsFlat.find(l => l.id === lid);
+            if (!les) return [];
+            const lblocks = renderLessonBlocks(les.content);
+            return idxs.map(i => {
+              const b = lblocks[i];
+              const text = b?.text || (b?.items ? b.items.join(" · ") : "");
+              return (
+                <div key={lid + i} className="note">
+                  <span className="t">{text.slice(0, 220)}{text.length > 220 ? "…" : ""}</span>
+                  <div className="l">{les.title}</div>
+                </div>
+              );
+            });
+          })
+        )}
+        <div style={{ height: 30 }} />
+      </div>
+
+      <div className={"sheet " + (sheet === "share" ? "in" : "")}>
+        <div className="sheet-grab"></div>
+        <h2>Compartir</h2>
+        <div className="sub">una tarjeta linda lista para redes</div>
+        <div className="share-host">
+          <div className="share-card">
+            <div className="top">Claude ABC · Mód {readerMod?.num}</div>
+            <div className="ttl">"{readerLesson?.title || mod.title}"</div>
+            <div className="ft">claudeparacreativos.com</div>
+          </div>
+          <div className="share-actions">
+            <button className="secondary" onClick={() => navigator.clipboard?.writeText(window.location.href)}>Copiar link</button>
+            <button className="primary">Descargar imagen</button>
+          </div>
+        </div>
+      </div>
+
+      {confetti && (
+        <div className="confetti">
+          {Array.from({ length: 50 }).map((_, i) => {
+            const colors = [`oklch(0.62 0.14 ${mod.hue})`, "oklch(0.7 0.16 80)", "oklch(0.55 0.14 145)", "oklch(0.55 0.18 28)"];
+            const shapes = ["50%", "1px", "1px"];
+            return (
+              <span key={i} style={{
+                left: `${Math.random() * 100}%`,
+                width: 8 + Math.random() * 6,
+                height: 10 + Math.random() * 8,
+                background: colors[i % colors.length],
+                borderRadius: shapes[i % shapes.length],
+                animationDelay: `${Math.random() * 0.4}s`,
+                animationDuration: `${1.4 + Math.random() * 0.9}s`,
+                transform: `rotate(${Math.random() * 360}deg)`,
+              }} />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
